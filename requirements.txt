@@ -1,9 +1,11 @@
 tensorflow
-tensorflow-datasets
 flask
 flask-cors
-pillow
-numpy
 matplotlib
+pandas
+numpy
 opencv-python
+pytest
 gunicorn
+azure-cli
+docker
