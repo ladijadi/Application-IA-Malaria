@@ -1,0 +1,9 @@
+tensorflow
+tensorflow-datasets
+flask
+flask-cors
+pillow
+numpy
+matplotlib
+opencv-python
+gunicorn
