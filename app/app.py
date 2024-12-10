@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 
 app = Flask(__name__)
-model = tf.keras.models.load_model("models/malaria_model.h5")
+model = tf.keras.models.load_model("model/malaria_model.h5")
 
 def preprocess_image(image):
     """Prétraitement de l'image téléchargée."""
