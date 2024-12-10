@@ -1,14 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Malaria Classification</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaria Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            text-align: center;
+        }
+        h1 {
+            color: #007BFF;
+        }
+        form {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            display: inline-block;
+        }
+        input[type="file"] {
+            display: block;
+            margin: 10px 0;
+            padding: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result-container {
+            margin-top: 20px;
+        }
+        #prediction-result {
+            color: #007BFF;
+            font-size: 1.5em;
+        }
+        #uploaded-image {
+            margin-top: 20px;
+            max-width: 300px;
+            max-height: 300px;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>Classifier une image</h1>
-    <form action="/predict" method="post" enctype="multipart/form-data">
-        <label for="file">Choisissez une image :</label>
-        <input type="file" id="file" name="file" accept="image/*">
-        <button type="submit">Classifier</button>
+    <h1>Application de Détection de la Malaria : Prédisez et Prévenez!</h1>
+    <form id="prediction-form" enctype="multipart/form-data">
+        <label for="file">Charger une image:</label>
+        <input type="file" name="file" id="file" accept="image/*" required>
+        <button type="submit" id="submit-btn" disabled>Prédiction</button>
     </form>
+    <div id="result-container" style="display: none;">
+        <!-- Container to display the prediction result -->
+        <h2 id="prediction-result"></h2>
+        <!-- Container to display the uploaded image -->
+        <img id="uploaded-image" src="" alt="Uploaded Image">
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#file').on('change', function() {
+                var submitBtn = $('#submit-btn');
+                if (this.files.length > 0) {
+                    submitBtn.prop('disabled', false);
+                } else {
+                    submitBtn.prop('disabled', true);
+                }
+            });
+
+            $('#prediction-form').on('submit', function(event) {
+                event.preventDefault();
+                
+                var formData = new FormData(this);
+                
+                $.ajax({
+                    url: '/predict', // URL de l'API
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        var prediction = response.prediction;
+                        var imageUrl = URL.createObjectURL($('#file')[0].files[0]);
+                        
+                        $('#prediction-result').text("Prediction: " + prediction);
+                        $('#uploaded-image').attr('src', imageUrl);
+                        $('#result-container').show();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        $('#prediction-result').text("Error: " + errorThrown);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
